@@ -24,12 +24,12 @@ RUN containerd.exe --register-service
 # RUN Start-Service containerd
 
 ## Install buildkitd
-RUN Invoke-WebRequest -Uri "https://github.com/moby/buildkit/releases/download/${BUILDKIT_VERSION}/buildkit-${BUILDKIT_VERSION}.windows-${ARCH}.tar.gz" -OutFile "buildkit-${BUILDKIT_VERSION}.windows-${ARCH}.tar.gz"
-RUN Expand-Archive -Path ".\buildkit-${BUILDKIT_VERSION}.windows-${ARCH}.tar.gz" -DestinationPath ".\bin"
+RUN Invoke-WebRequest -Uri "https://github.com/moby/buildkit/releases/download/$($env:BUILDKIT_VERSION)/buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz" -OutFile "buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz"
+RUN Expand-Archive -Path ".\buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz" -DestinationPath ".\bin"
 
 RUN Copy-Item -Path ".\bin" -Destination "$Env:ProgramFiles\buildkit" -Recurse -Force
 RUN $Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\buildkit"
 RUN [Environment]::SetEnvironmentVariable( "Path", $Path, "Machine")
 RUN $Env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-RUN Remove-Item .\containerd-${CONTAINERD_VERSION}-windows-amd64.tar.gz, .\buildkit-${BUILDKIT_VERSION}.windows-${ARCH}.tar.gz
+RUN Remove-Item .\containerd-$($env:CONTAINERD_VERSION)-windows-amd64.tar.gz, .\buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz
 # CMD buildkitd.exe

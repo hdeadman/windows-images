@@ -16,8 +16,8 @@ RUN mkdir /bin
 RUN tar -xzf ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz" -C ".\bin"
 
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force
-ENV Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\containerd"
-RUN [Environment]::SetEnvironmentVariable( "Path", $Path, "Machine")
+RUN NewPath = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\containerd"
+RUN [Environment]::SetEnvironmentVariable( "PATH", $Env:NewPath, "Machine")
 RUN $Env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 RUN containerd.exe config default | Out-File $Env:ProgramFiles\containerd\config.toml -Encoding ascii
 RUN Get-Content $Env:ProgramFiles\containerd\config.toml

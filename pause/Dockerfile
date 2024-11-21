@@ -12,6 +12,7 @@ ARG ARCH="amd64"
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
 RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$($env:CONTAINERD_VERSION)/containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz" -OutFile ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz"
+RUN mkdir /bin
 RUN tar -xzf ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz" -C ".\bin"
 
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force

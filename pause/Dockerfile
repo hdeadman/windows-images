@@ -6,7 +6,8 @@ ARG CONTAINERD_VERSION="1.7.13"
 ARG BUILDKIT_VERSION="v0.17.1"
 ARG ARCH="amd64"
 
-RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-windows-${ARCH}.tar.gz" -OutFile ".\containerd-${CONTAINERD_VERSION}-windows-${ARCH}.tar.gz"
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
+RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$($env:CONTAINERD_VERSION))/containerd-$($env:CONTAINERD_VERSION))-windows-$($env:ARCH)).tar.gz" -OutFile ".\containerd-$($env:CONTAINERD_VERSION))-windows-$($env:ARCH)).tar.gz"
 RUN Expand-Archive -Path ".\containerd-${CONTAINERD_VERSION}-windows-${ARCH}.tar.gz" -DestinationPath ".\bin"
 
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force

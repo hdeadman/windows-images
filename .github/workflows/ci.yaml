@@ -23,4 +23,4 @@ jobs:
           git
     - name: Docker Build
       run: |
-        docker build -f pause/Dockerfile pause
+        docker build -f buildkitd/Dockerfile buildkitd

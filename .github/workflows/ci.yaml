@@ -1,0 +1,26 @@
+name: CI Workflow
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build-containers:
+    runs-on: windows-2019
+    name: Build Containers
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Msys2
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          make
+          git
+    - name: Docker Build
+      run: |
+        docker build -f pause/Dockerfile pause

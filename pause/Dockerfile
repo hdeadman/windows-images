@@ -18,12 +18,15 @@ RUN tar -xzf ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.g
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force
 RUN $Env:NewPath = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + [IO.Path]::PathSeparator + '$Env:ProgramFiles\containerd'
 RUN [Environment]::SetEnvironmentVariable( 'PATH', $Env:NewPath, 'Machine')
+RUN $Env:Path = [System.Environment]::GetEnvironmentVariable('PATH','Machine') + [IO.Path]::PathSeparator + [System.Environment]::GetEnvironmentVariable('PATH','User')
 RUN containerd.exe config default | Out-File $Env:ProgramFiles\containerd\config.toml -Encoding ascii
 RUN Get-Content $Env:ProgramFiles\containerd\config.toml
 RUN containerd.exe --register-service
 # RUN Start-Service containerd
 
 ## Install buildkitd
+RUN Remove-Item -Recurse -Force /bin
+RUN mkdir /bin
 RUN Invoke-WebRequest -Uri "https://github.com/moby/buildkit/releases/download/$($env:BUILDKIT_VERSION)/buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz" -OutFile "buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz"
 RUN tar -xzf ".\buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz" -C ".\bin"
 

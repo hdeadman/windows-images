@@ -18,7 +18,7 @@ RUN tar -xzf ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.g
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force
 RUN $Env:NewPath = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + [IO.Path]::PathSeparator + '$Env:ProgramFiles\containerd'
 RUN [Environment]::SetEnvironmentVariable( 'PATH', $Env:NewPath, 'Machine')
-RUN $Env:Path = [System.Environment]::GetEnvironmentVariable('PATH','Machine') + [IO.Path]::PathSeparator + [System.Environment]::GetEnvironmentVariable('PATH','User')
+RUN $Env:Path = [System.Environment]::GetEnvironmentVariable('PATH','Machine')
 RUN containerd.exe config default | Out-File $Env:ProgramFiles\containerd\config.toml -Encoding ascii
 RUN Get-Content $Env:ProgramFiles\containerd\config.toml
 RUN containerd.exe --register-service
@@ -33,5 +33,6 @@ RUN tar -xzf ".\buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz" -
 RUN Copy-Item -Path ".\bin" -Destination "$Env:ProgramFiles\buildkit" -Recurse -Force
 RUN $Env:NewPath = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + [IO.Path]::PathSeparator + '$Env:ProgramFiles\buildkit'
 RUN [Environment]::SetEnvironmentVariable( 'PATH', $Env:NewPath, 'Machine')
+
 RUN Remove-Item .\containerd-$($env:CONTAINERD_VERSION)-windows-amd64.tar.gz, .\buildkit-$($env:BUILDKIT_VERSION).windows-$($env:ARCH).tar.gz
 # CMD buildkitd.exe

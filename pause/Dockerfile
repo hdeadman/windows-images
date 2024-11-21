@@ -8,8 +8,8 @@ ARG ARCH="amd64"
 
 
 
-RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz" -OutFile ".\containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz"
-RUN Expand-Archive -Path ".\containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz" -DestinationPath ".\bin"
+RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-windows-$ARCH.tar.gz" -OutFile ".\containerd-$CONTAINERD_VERSION-windows-$ARCH.tar.gz"
+RUN Expand-Archive -Path ".\containerd-$CONTAINERD_VERSION-windows-$ARCH.tar.gz" -DestinationPath ".\bin"
 
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force
 ENV Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\containerd"

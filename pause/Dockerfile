@@ -6,9 +6,13 @@ ARG CONTAINERD_VERSION="1.7.13"
 ARG BUILDKIT_VERSION="v0.17.1"
 ARG ARCH="amd64"
 
+ENV ARCH=${ARCH}
+ENV CONTAINERD_VERSION=${CONTAINERD_VERSION}
+ENV BUILDKIT_VERSION=${BUILDKIT_VERSION}
+
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
-RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$($env:CONTAINERD_VERSION))/containerd-$($env:CONTAINERD_VERSION))-windows-$($env:ARCH)).tar.gz" -OutFile ".\containerd-$($env:CONTAINERD_VERSION))-windows-$($env:ARCH)).tar.gz"
-RUN Expand-Archive -Path ".\containerd-${CONTAINERD_VERSION}-windows-${ARCH}.tar.gz" -DestinationPath ".\bin"
+RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$($env:CONTAINERD_VERSION)/containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz" -OutFile ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz"
+RUN Expand-Archive -Path ".\containerd-$($env:CONTAINERD_VERSION)-windows-$($env:ARCH).tar.gz" -DestinationPath ".\bin"
 
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force
 ENV Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\containerd"

@@ -7,9 +7,10 @@ ARG BUILDKIT_VERSION="v0.17.1"
 ARG ARCH="amd64"
 
 
-# Download and extract desired containerd Windows binaries
-RUN curl.exe -LO https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz
-RUN tar.exe xvf .\containerd-$CONTAINERD_VERSION-windows-amd64.tar.gz
+
+RUN Invoke-WebRequest -Uri "https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz" -OutFile ".\containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz"
+RUN Expand-Archive -Path ".\containerd-$CONTAINERD_VERSION-windows-$Arch.tar.gz" -DestinationPath ".\bin"
+
 RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Force
 ENV Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\containerd"
 RUN [Environment]::SetEnvironmentVariable( "Path", $Path, "Machine")
@@ -20,8 +21,9 @@ RUN containerd.exe --register-service
 # RUN Start-Service containerd
 
 ## Install buildkitd
-RUN curl.exe -LO https://github.com/moby/buildkit/releases/download/$BUILDKIT_VERSION/buildkit-$BUILDKIT_VERSION.windows-$ARCH.tar.gz
-RUN tar.exe xvf .\buildkit-$BUILDKIT_VERSION.windows-$ARCH.tar.gz
+RUN Invoke-WebRequest -Uri "https://github.com/moby/buildkit/releases/download/$BUILDKIT_VERSION/buildkit-$BUILDKIT_VERSION.windows-$ARCH.tar.gz" -OutFile "buildkit-$BUILDKIT_VERSION.windows-$ARCH.tar.gz"
+RUN Expand-Archive -Path ".\buildkit-$BUILDKIT_VERSION.windows-$ARCH.tar.gz" -DestinationPath ".\bin"
+
 RUN Copy-Item -Path ".\bin" -Destination "$Env:ProgramFiles\buildkit" -Recurse -Force
 RUN $Path = [Environment]::GetEnvironmentVariable("PATH", "Machine") + [IO.Path]::PathSeparator + "$Env:ProgramFiles\buildkit"
 RUN [Environment]::SetEnvironmentVariable( "Path", $Path, "Machine")

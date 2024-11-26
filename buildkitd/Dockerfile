@@ -19,6 +19,7 @@ RUN Copy-Item -Path .\bin -Destination $Env:ProgramFiles\containerd -Recurse -Fo
 RUN $Env:NewPath = [Environment]::GetEnvironmentVariable('PATH', 'Machine') + [IO.Path]::PathSeparator + '$Env:ProgramFiles\containerd'
 RUN [Environment]::SetEnvironmentVariable( 'PATH', $Env:NewPath, 'Machine')
 #RUN $Env:Path = [Environment]::GetEnvironmentVariable('PATH','Machine')
+RUN Get-ChildItem -Path $Env:ProgramFiles\containerd -Recurse
 RUN $Env:ProgramFiles\containerd\containerd.exe config default | Out-File $Env:ProgramFiles\containerd\config.toml -Encoding ascii
 RUN Get-Content $Env:ProgramFiles\containerd\config.toml
 RUN $Env:ProgramFiles\containerd\containerd.exe --register-service
